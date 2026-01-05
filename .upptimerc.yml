@@ -34,3 +34,20 @@ status-website:
 
 # Upptime also supports notifications, assigning issues, and more
 # See https://upptime.js.org/docs/configuration
+
+notifications:
+  - type: custom
+    env:
+      BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    on:
+      - status-change
+    run: |
+      # Mesajul pentru Telegram
+      SITE="${SITE_NAME:-Unknown site}"
+      STATUS="${STATUS:-Unknown status}"
+      MESSAGE="🖥️ Site: $SITE\nStatus: $STATUS"
+      curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+        -d chat_id=$CHAT_ID \
+        -d text="$MESSAGE"
+
